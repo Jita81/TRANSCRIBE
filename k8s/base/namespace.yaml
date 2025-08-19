@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zeus-eaa
+  labels:
+    name: zeus-eaa
+    app.kubernetes.io/name: zeus-eaa-compliance
+    app.kubernetes.io/version: v1.0.0
+  annotations:
+    description: "Zeus EAA Compliance Tool - Enterprise Video Processing Platform"

@@ -1,0 +1,195 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zeus-web-api
+  namespace: zeus-eaa
+  labels:
+    app.kubernetes.io/name: zeus-eaa-compliance
+    app.kubernetes.io/component: web-api
+    app.kubernetes.io/version: v1.0.0
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: zeus-eaa-compliance
+      app.kubernetes.io/component: web-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: zeus-eaa-compliance
+        app.kubernetes.io/component: web-api
+        app.kubernetes.io/version: v1.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+        kubectl.kubernetes.io/default-container: zeus-web-api
+    spec:
+      serviceAccountName: zeus-api
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      containers:
+      - name: zeus-web-api
+        image: zeus-web-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        env:
+        # Configuration from ConfigMap
+        - name: WHISPER_MODEL
+          valueFrom:
+            configMapKeyRef:
+              name: zeus-config
+              key: WHISPER_MODEL
+        - name: NUM_PASSES
+          valueFrom:
+            configMapKeyRef:
+              name: zeus-config
+              key: NUM_PASSES
+        - name: COMPLIANCE_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: zeus-config
+              key: COMPLIANCE_LEVEL
+        - name: NAMESPACE
+          valueFrom:
+            configMapKeyRef:
+              name: zeus-config
+              key: NAMESPACE
+        
+        # Secrets
+        - name: AKS_CLUSTER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: zeus-secrets
+              key: AKS_CLUSTER_NAME
+        - name: RESOURCE_GROUP
+          valueFrom:
+            secretKeyRef:
+              name: zeus-secrets
+              key: RESOURCE_GROUP
+        - name: SUBSCRIPTION_ID
+          valueFrom:
+            secretKeyRef:
+              name: zeus-secrets
+              key: SUBSCRIPTION_ID
+        - name: STORAGE_ACCOUNT_NAME
+          valueFrom:
+            secretKeyRef:
+              name: zeus-secrets
+              key: STORAGE_ACCOUNT_NAME
+        - name: STORAGE_ACCOUNT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: zeus-secrets
+              key: STORAGE_ACCOUNT_KEY
+        
+        # Azure Service Principal
+        - name: AZURE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: azure-service-principal
+              key: CLIENT_ID
+        - name: AZURE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: azure-service-principal
+              key: CLIENT_SECRET
+        - name: AZURE_TENANT_ID
+          valueFrom:
+            secretKeyRef:
+              name: azure-service-principal
+              key: TENANT_ID
+        
+        # Pod metadata
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/cache
+        - name: kube-config
+          mountPath: /home/zeus/.kube
+          readOnly: true
+      
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: kube-config
+        emptyDir: {}
+      
+      nodeSelector:
+        kubernetes.io/os: linux
+      
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"
+      
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - web-api
+              topologyKey: kubernetes.io/hostname

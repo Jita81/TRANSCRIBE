@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zeus-config
+  namespace: zeus-eaa
+  labels:
+    app.kubernetes.io/name: zeus-eaa-compliance
+    app.kubernetes.io/component: config
+data:
+  # Processing Configuration
+  WHISPER_MODEL: "large-v3"
+  NUM_PASSES: "5"
+  COMPLIANCE_LEVEL: "eaa"
+  
+  # Container Configuration
+  INPUT_CONTAINER: "video-input"
+  OUTPUT_CONTAINER: "subtitle-output"
+  
+  # Processing Limits
+  PROCESSING_TIMEOUT: "3600"  # 1 hour
+  MAX_CONCURRENT_JOBS: "10"
+  
+  # Kubernetes Configuration
+  NAMESPACE: "zeus-processing"
+  SERVICE_ACCOUNT: "zeus-worker"
+  
+  # GPU Configuration
+  GPU_NODE_SELECTOR: "accelerator=nvidia-tesla-t4"

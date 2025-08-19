@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeus-web-api
+  namespace: zeus-eaa
+  labels:
+    app.kubernetes.io/name: zeus-eaa-compliance
+    app.kubernetes.io/component: web-api
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "false"
+    service.beta.kubernetes.io/azure-dns-label-name: "zeus-eaa-compliance"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  - port: 443
+    targetPort: 8000
+    protocol: TCP
+    name: https
+  selector:
+    app.kubernetes.io/name: zeus-eaa-compliance
+    app.kubernetes.io/component: web-api
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeus-web-api-internal
+  namespace: zeus-eaa
+  labels:
+    app.kubernetes.io/name: zeus-eaa-compliance
+    app.kubernetes.io/component: web-api-internal
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: zeus-eaa-compliance
+    app.kubernetes.io/component: web-api
