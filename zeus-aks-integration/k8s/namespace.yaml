@@ -1,0 +1,11 @@
+# Kubernetes namespace for Zeus EAA processing
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zeus-processing
+  labels:
+    name: zeus-processing
+    app: zeus-eaa-compliance
+    version: v1.0.0
+  annotations:
+    description: "Zeus EAA Compliance Tool processing namespace"
