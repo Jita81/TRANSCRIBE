@@ -81,7 +81,7 @@ graph TB
 
 ```
 zeus-eaa-compliance-tool/
-├── 🐍 zeus-eaa-compliance-tool.py      # Core processing engine (31K lines)
+├── 🐍 zeus-eaa-compliance-tool.py      # Core processing engine (878 lines)
 ├── 🔧 zeus-aks-integration/             # Enterprise AKS integration
 │   ├── 📋 core.py                       # Integration orchestration
 │   ├── 📝 types.py                      # Type definitions
@@ -106,7 +106,7 @@ zeus-eaa-compliance-tool/
 ├── 🚀 deploy-to-aks.sh                  # Deployment automation
 ├── ⚙️  setup-environment.sh              # Azure resource setup
 ├── ✅ verify-setup.sh                    # Setup verification
-└── 📚 DEPLOYMENT.md                     # Complete deployment guide
+└── 📚 docs/DEPLOYMENT.md                # Complete deployment guide
 ```
 
 ## 🚀 Quick Start
@@ -616,33 +616,33 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Documentation
 
-- **📖 [Full Documentation](https://docs.zeus-network.com/eaa-compliance)**
-- **🏗️ [Architecture Guide](docs/architecture.md)**
-- **🚀 [Deployment Guide](DEPLOYMENT.md)**
-- **🔧 [API Reference](docs/api.md)**
+- **📚 [Documentation Index](docs/README.md)**
+- **🔐 [Credentials Setup Guide](docs/CREDENTIALS_SETUP.md)**
+- **🚀 [Deployment Guide](docs/DEPLOYMENT.md)**
+- **🔧 [Development Fixes Summary](docs/FIX_SUMMARY.md)**
 
 ### Community
 
-- **💬 [Discord Community](https://discord.gg/zeus-network)**
-- **📧 [Mailing List](https://groups.google.com/g/zeus-eaa-compliance)**
 - **🐛 [Issue Tracker](https://github.com/Jita81/TRANSCRIBE/issues)**
+- **💡 [Feature Requests](https://github.com/Jita81/TRANSCRIBE/issues/new?template=feature_request.md)**
+- **🐞 [Bug Reports](https://github.com/Jita81/TRANSCRIBE/issues/new?template=bug_report.md)**
 
-### Enterprise Support
+### Support
 
-For enterprise support, custom deployments, and SLA agreements:
+For questions, issues, or contributions:
 
-- **📧 Email**: enterprise@zeus-network.com
-- **📞 Phone**: +1 (555) 123-ZEUS
-- **🌐 Website**: [zeus-network.com/enterprise](https://zeus-network.com/enterprise)
+- **📖 Check the [Documentation](docs/README.md)** for setup and deployment guides
+- **🔍 Search [existing issues](https://github.com/Jita81/TRANSCRIBE/issues)** before creating new ones
+- **📝 Create an [issue](https://github.com/Jita81/TRANSCRIBE/issues/new)** for bugs or feature requests
 
 ---
 
 <div align="center">
 
-**Built with ❤️ by the Zeus Network Team**
+**Zeus EAA Compliance Tool**
 
 **✅ PRODUCTION-READY • 🚀 ENTERPRISE-SCALE • 🎯 EAA-COMPLIANT**
 
-[🌟 Star us on GitHub](https://github.com/Jita81/TRANSCRIBE) • [🐦 Follow us on Twitter](https://twitter.com/zeus_network) • [💼 Visit our Website](https://zeus-network.com)
+[🌟 Star us on GitHub](https://github.com/Jita81/TRANSCRIBE) • [📖 Read the Docs](docs/README.md) • [🚀 Get Started](#quick-start)
 
 </div>
