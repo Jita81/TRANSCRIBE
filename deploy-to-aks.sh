@@ -148,8 +148,9 @@ deploy_manifests() {
     header "Deploying Kubernetes Manifests"
     
     # Apply base manifests in order
-    log "Applying namespace..."
+    log "Applying namespaces..."
     kubectl apply -f k8s/base/namespace.yaml
+    kubectl apply -f zeus-aks-integration/k8s/namespace.yaml
     
     log "Applying RBAC..."
     kubectl apply -f k8s/base/rbac.yaml
